@@ -9,34 +9,34 @@ import {
 
 const Footer = () => {
   return (
-    <footer className="bg-blue-100 pt-20 text-white, md:py-4 md:px-13 lg:px-14 ">
+    <footer className="bg-[#192f56] pt-20 text-white, md:py-4 md:px-13 lg:px-14 border-t-2 border-blue-100 px-6 ">
       <div className="flex justify-between py-6">
         <div className="max-w-md  ">
-          <h2 className="text-xl font-medium text-gray-800 mb-4">About us</h2>
+          <h2 className="text-2xl font-bold text-blue-300 mb-4">About us</h2>
 
-          <p className="text-gray-800 text-sm ">
+          <p className="text-blue-100 text-sm ">
             Your Pathway to Innovation and Success.Empowering students with
             knowledge, skills, and confidence to shape the future.{" "}
           </p>
 
           <div className="gap-x-4 pt-4">
-            <h2 className="text-xl font-medium text-gray-800 mb-4">Connect</h2>
+            <h2 className="text-xl font-medium text-blue-100 mb-4">Connect</h2>
             <div className="flex flex-row items-center gap-x-3 mb-3">
               <a
                 href=" "
-                className="hover: underline bg-white/80 text-gray-600 p-2 rounded-full shadow text-gray-400="
+                className="hover: underline bg-black/80 text-blue-100 p-2 rounded-full shadow text-blue-400="
               >
                 <Facebook />
               </a>
               <a
                 href=" "
-                className="hover: underline  bg-white/80 text-gray-600 p-2 rounded-full shadow text-gray-400="
+                className="hover: underline  bg-black/80 text-blue-100 p-2 rounded-full shadow text-blue-400="
               >
                 <Twitter />
               </a>
               <a
                 href=" "
-                className="hover: underline bg-white/80 text-gray-600 p-2 rounded-full shadow text-gray-400="
+                className="hover: underline bg-black/80 text-blue-100 p-2 rounded-full shadow text-blue-400="
               >
                 <Instagram />
               </a>
@@ -45,14 +45,14 @@ const Footer = () => {
         </div>
 
         <div>
-          <h2 className="text-xl font-medium text-gray-800 mb-4">
+          <h2 className="text-xl font-medium text-blue-100 mb-4">
             Quick links{" "}
           </h2>
           <ul>
             <li>
               <a
                 href=" "
-                className=" text-sm text-size-3  text-gray-600  hover:text-white/490 focus:text-gray "
+                className=" text-sm text-size-3  text-blue-100  hover:text-white/490 focus:text-blue "
               >
                 {" "}
                 Home
@@ -61,7 +61,7 @@ const Footer = () => {
             <li>
               <a
                 href=" "
-                className="text-sm text-size-3  text-gray-600 hover:text-white/490 focus:text-gray "
+                className="text-sm text-size-3  text-blue-100 hover:text-white/490 focus:text-blue "
               >
                 {" "}
                 service
@@ -70,7 +70,7 @@ const Footer = () => {
             <li>
               <a
                 href=" "
-                className="text-sm text-size-3   text-gray-600 hover:text-white/490 focus:text-gray"
+                className="text-sm text-size-3   text-blue-100 hover:text-white/490 focus:text-blue"
               >
                 {" "}
                 contact{" "}
@@ -79,7 +79,7 @@ const Footer = () => {
             <li>
               <a
                 href=" "
-                className="text-sm text-size-3   text-gray-600 hover:text-white/490 focus:text-gray"
+                className="text-sm text-size-3   text-blue-100 hover:text-white/490 focus:text-blue"
               >
                 {" "}
                 about us
@@ -88,22 +88,22 @@ const Footer = () => {
           </ul>
         </div>
         <div>
-          <h2 className="text-xl font-medium text-gray-800 mb-4">Resources</h2>
+          <h2 className="text-xl font-medium text-blue-100 mb-4">Resources</h2>
           <div className=" gap-x-3 py-1.5">
             <ul>
-              <li className="text-sm cursor-pointer text-gray-600 px-1 hover:text-white/490 focus:text-gray">
+              <li className="text-sm cursor-pointer text-blue-100 px-1 hover:text-white/490 focus:text-blue">
                 {" "}
                 Support
               </li>
-              <li className="text-sm cursor-pointer text-gray-600 px-1 hover:text-white/490 focus:text-gray">
+              <li className="text-sm cursor-pointer text-blue-100 px-1 hover:text-white/490 focus:text-blue">
                 {" "}
                 Security
               </li>
-              <li className="text-sm cursor-pointer text-gray-600 px-1 hover:text-white/490 focus:text-gray ">
+              <li className="text-sm cursor-pointer text-blue-100 px-1 hover:text-white/490 focus:text-blue ">
                 {" "}
                 Help center
               </li>
-              <li className="text-sm cursor-pointer text-gray-600 px-1 hover:text-white/490 focus:text-gray">
+              <li className="text-sm cursor-pointer text-blue-100 px-1 hover:text-white/490 focus:text-blue">
                 {" "}
                 Terms of use
               </li>
@@ -112,26 +112,26 @@ const Footer = () => {
         </div>
 
         <div>
-          <h2 className="text-xl font-medium text-gray-800 mb-4">Contact</h2>
+          <h2 className="text-xl font-medium text-blue-100 mb-4">Contact</h2>
           <ul>
-            <div className="flex gap-x-3 py-1.5 text-sm">
+            <div className="flex gap-x-3 text-blue-100 py-1.5 text-sm">
               {" "}
-              <PhoneIcon /> 025-584505
-              <a href=" " className=" text-gray-600">
+              <PhoneIcon className="text-blue-100" /> 025-584505
+              <a href=" " className=" text-blue-100">
                 {" "}
               </a>
             </div>
-            <div className="flex gap-3 py-1.5 text-sm">
+            <div className="flex gap-3 text-blue-100 py-1.5 text-sm">
               {" "}
-              <Mail /> official.vactechjr@gmail.com
-              <a href=" " className=" text-gray-600">
+              <Mail className="text-blue-100" /> official.vactechjr@gmail.com
+              <a href=" " className=" text-blue-100">
                 {" "}
               </a>
             </div>
-            <div className="flex gap-3 py-1.5 text-sm">
+            <div className="flex gap-3 text-blue-100 py-1.5 text-sm">
               {" "}
-              <MapPinned /> Aaitbare-itahari, sunsari
-              <a href=" " className=" text-gray-600">
+              <MapPinned className="text-blue-100" /> Aaitbare-itahari, sunsari
+              <a href=" " className=" text-blue-100">
                 {" "}
               </a>
             </div>
@@ -139,11 +139,11 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className="border-t border-gray-900 my-5" />
+      <div className="border-t border-blue-100 my-5" />
 
       <div className="flex flex-col md:flex-row justify-between items-center text-center gap-4">
-        <p className="text-gray-800 ">@2024 Vac Tec jr. All Right Reserved.</p>
-        <div className="flex items-centre gap-4  text-sm text-gray-800 ">
+        <p className="text-blue-100 ">@2024 Vac Tec jr. All Right Reserved.</p>
+        <div className="flex items-centre gap-4  text-sm text-blue-100 ">
           <a href="/terms" className="hover:text-black-700 underline">
             Terms & Conditions
           </a>
