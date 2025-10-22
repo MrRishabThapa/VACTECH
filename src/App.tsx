@@ -11,7 +11,7 @@ import GalleryPage from "./components/gallery/GalleryPage";
 import ProjectDetailPage from "./pages/ProjectDetailPage";
 import DashBoard from "./pages/DashBoard";
 import EventsPage from "./pages/EventsPage";
-
+import Footer from "./components/Footer";
 import { AdminDataProvider } from "./admin/context/AdminDataContext";
 import AdminPanelLayout from "./admin/components/AdminLayout";
 import AdminDashboard from "./admin/pages/AdminDashboard";
@@ -27,6 +27,7 @@ const PublicLayout = () => (
   <>
     <NavBar />
     <Outlet />
+    <Footer />
   </>
 );
 

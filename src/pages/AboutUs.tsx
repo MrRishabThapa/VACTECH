@@ -175,7 +175,7 @@ export default function AboutSection() {
   return (
     <section
       id="about"
-      className="min-h-[120vh] pt-10 w-full bg-[#0a1a33] text-white font-poppins"
+      className="min-h-[120vh] pt-10  w-full bg-[#0a1a33] text-white font-poppins"
     >
       <div className="h-[120vh] flex flex-col justify-center items-center px-6 bg-[#0a1a33]">
         <div className=" w-full h-full rounded-2xl p-10">
@@ -329,8 +329,8 @@ export default function AboutSection() {
       </div>
 
       {/* --- 2nd VH : Head of Department --- */}
-      <div className=" m-0 p-0 flex flex-col justify-center items-center font-poppins">
-        <div className="max-w-full w-full bg-[#112244] shadow-xl pt-10 gap-5">
+      <div className=" m-0 p-0 flex flex-col justify-center items-center  font-poppins">
+        <div className="max-w-full w-full bg-[#112244] shadow-xl pb-20 pt-10 gap-5">
           <h3 className="text-5xl font-[900] text-center font-poppins mb-2 text-[#9cc9ff]">
             Board Of Directors
           </h3>
