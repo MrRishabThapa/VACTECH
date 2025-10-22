@@ -41,6 +41,9 @@ const NavLinkList = ({ onLinkClick }: any) => {
       <NavLink to="/dashboard" className={linkClassName} onClick={handleClick}>
         Dashboard
       </NavLink>
+      <NavLink to="/admin" className={linkClassName} onClick={handleClick}>
+        Pannel
+      </NavLink>
     </>
   );
 };

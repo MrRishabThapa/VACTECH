@@ -1,4 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
+
 import {
   LayoutDashboard,
   Info,
@@ -9,15 +10,14 @@ import {
   Users,
   Settings,
   LogOut,
-  Rocket,
 } from "lucide-react";
 
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/admin" },
   { icon: Info, label: "About Page", path: "/admin/about" },
-  { icon: Calendar, label: "Events", path: "/admin/events" },
+  { icon: Calendar, label: "Events", path: "/admin/event" },
   { icon: Lightbulb, label: "Projects", path: "/admin/projects" },
-  { icon: Globe2, label: "Community", path: "/admin/community" },
+  { icon: Globe2, label: "Community", path: "/admin/Community" },
   { icon: BarChart3, label: "Polls", path: "/admin/polls" },
   { icon: Users, label: "Members", path: "/admin/members" },
   { icon: Settings, label: "Settings", path: "/admin/settings" },
@@ -38,10 +38,7 @@ export default function Sidebar({ isOpen }: { isOpen: boolean }) {
         isOpen ? "translate-x-0" : "-translate-x-full"
       }`}
     >
-      <div className="flex items-center justify-center h-20 border-b border-gray-700">
-        <Rocket className="text-[#5ea4ff]" size={28} />
-        <h1 className="text-xl font-bold ml-2">VAC Tech Jr</h1>
-      </div>
+      <div className="flex items-center justify-center h-20 border-b border-gray-700"></div>
       <nav className="flex-grow p-4">
         <ul>
           {navItems.map((item) => (

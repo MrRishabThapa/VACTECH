@@ -16,7 +16,7 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           title="Total Members"
-          value="50+"
+          value="50"
           icon={Users}
           color="#5ea4ff"
         />

@@ -116,8 +116,7 @@ export default function AdminPolls() {
         onClose={() => setIsModalOpen(false)}
         title="Create New Poll"
       >
-        {/* Form for creating a new poll would go here */}
-        <p className="text-gray-400">Poll creation form fields...</p>
+        //TODO: need to add form here
       </Modal>
     </div>
   );
