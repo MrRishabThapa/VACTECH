@@ -1,7 +1,6 @@
-import type { createContext, useState, useContext, ReactNode } from "react";
+import { createContext, useState, useContext } from "react";
+import type { ReactNode } from "react";
 
-// --- Define the shape of your data ---
-// Using the same types from your pages
 type Role = "Admin" | "Member" | "Lead";
 type Committee = "Tech" | "Events" | "Marketing" | "Outreach" | "None";
 
@@ -16,9 +15,8 @@ interface Member {
   memoTokens: number;
   attendance: number;
 }
-// You can add Project, Event, Poll interfaces here too
+//  can add Project, Event, Poll interfaces here too
 
-// --- Define the shape of the context "brain" ---
 interface AdminDataContextType {
   members: Member[];
   addMember: (memberData: Omit<Member, "id">) => void;
@@ -27,15 +25,12 @@ interface AdminDataContextType {
   // We will add projects, events, etc. here later
 }
 
-// --- Create the context ---
 const AdminDataContext = createContext<AdminDataContextType | undefined>(
   undefined
 );
 
-// --- Create the Provider (the component that holds the state) ---
 export const AdminDataProvider = ({ children }: { children: ReactNode }) => {
   const [members, setMembers] = useState<Member[]>([
-    // Your initial mock data now lives here, in one central place
     {
       id: "usr-001",
       username: "alex_dev",
@@ -71,7 +66,6 @@ export const AdminDataProvider = ({ children }: { children: ReactNode }) => {
     },
   ]);
 
-  // --- Define the actions that modify the state ---
   const addMember = (memberData: Omit<Member, "id">) => {
     const newMember: Member = { id: `usr-${Date.now()}`, ...memberData };
     setMembers((prev) => [newMember, ...prev]);
@@ -90,8 +84,7 @@ export const AdminDataProvider = ({ children }: { children: ReactNode }) => {
     setMembers((prev) => prev.filter((m) => m.id !== id));
   };
 
-  // --- Bundle everything to be provided to children components ---
-  const value = {
+  const value: any = {
     members,
     addMember,
     updateMember,
@@ -105,7 +98,6 @@ export const AdminDataProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-// --- Create a custom hook for easy access ---
 export const useAdminData = () => {
   const context = useContext(AdminDataContext);
   if (context === undefined) {
