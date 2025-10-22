@@ -1,11 +1,13 @@
 import { useState, useMemo } from "react";
-import { Search, Edit, Trash2, Plus, Filter } from "lucide-react"; // Re-added Filter
+import { Search, Edit, Trash2, Plus, Filter } from "lucide-react";
 import MemberRankBadge from "../components/MemberRankBadge";
 import Modal from "../components/Modal";
+import { useAdminData } from "../context/AdminDataContext"; // <-- IMPORT THE CENTRAL "BRAIN"
 
-type Role = "Admin" | "Member" | "Head";
-type Rank = "Newbie" | "Explorer" | "Builder" | "Developer" | "Hacker";
+// --- Type definitions are now defined in your context file, but we can re-declare them here for local use ---
+type Role = "Admin" | "Member" | "Lead";
 type Committee = "Tech" | "Events" | "Marketing" | "Outreach" | "None";
+type Rank = "Newbie" | "Explorer" | "Builder" | "Developer" | "Hacker";
 
 interface Member {
   id: string;
@@ -27,86 +29,19 @@ const getRank = (points: number): Rank => {
   return "Hacker";
 };
 
-const initialMembers: Member[] = [
-  // ... mock data
-
-  {
-    id: "usr-001",
-    username: "alex_dev",
-    fullName: "Alex Johnson",
-    email: "alex@example.com",
-    points: 1250,
-    role: "Admin",
-    committee: "Tech",
-    memoTokens: 15,
-    attendance: 95,
-  },
-  {
-    id: "usr-002",
-    username: "maria_ux",
-    fullName: "Maria Garcia",
-    email: "maria@example.com",
-    points: 800,
-    role: "Head",
-    committee: "Marketing",
-    memoTokens: 10,
-    attendance: 88,
-  },
-  {
-    id: "usr-003",
-    username: "sam_builds",
-    fullName: "Sam Williams",
-    email: "sam@example.com",
-    points: 450,
-    role: "Member",
-    committee: "Tech",
-    memoTokens: 5,
-    attendance: 92,
-  },
-  {
-    id: "usr-004",
-    username: "chloe_events",
-    fullName: "Chloe Brown",
-    email: "chloe@example.com",
-    points: 210,
-    role: "Member",
-    committee: "Events",
-    memoTokens: 8,
-    attendance: 76,
-  },
-  {
-    id: "usr-005",
-    username: "kenji_new",
-    fullName: "Kenji Tanaka",
-    email: "kenji@example.com",
-    points: 80,
-    role: "Member",
-    committee: "None",
-    memoTokens: 2,
-    attendance: 60,
-  },
-  {
-    id: "usr-006",
-    username: "aisha_code",
-    fullName: "Aisha Khan",
-    email: "aisha@example.com",
-    points: 650,
-    role: "Head",
-    committee: "Tech",
-    memoTokens: 12,
-    attendance: 98,
-  },
-];
-
-type MemberFormData = Omit<Member, "id" | "rank">;
-
 export default function AdminMembers() {
-  const [members, setMembers] = useState(initialMembers);
+  // === 1. GET DATA AND ACTIONS FROM THE CONTEXT ===
+  // The list of members and the functions to change it now come from the central context.
+  const { members, addMember, updateMember, deleteMember } = useAdminData();
+
+  // === 2. LOCAL UI STATE ===
+  // State for things that only affect this page (like search, filters, and modals) remains here.
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({ role: "All", committee: "All" });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingMember, setEditingMember] = useState<Member | null>(null);
 
+  // === 3. HANDLER FUNCTIONS THAT USE THE CONTEXT ===
   const handleOpenModal = (member: Member | null = null) => {
     setEditingMember(member);
     setIsModalOpen(true);
@@ -123,38 +58,33 @@ export default function AdminMembers() {
         "Are you sure you want to delete this member? This action cannot be undone."
       )
     ) {
-      setMembers((prev) => prev.filter((member) => member.id !== id));
+      deleteMember(id); // Use the function from the context
     }
   };
 
   const handleSaveMember = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-
-    const memberData: MemberFormData = {
+    const memberData = {
       fullName: formData.get("fullName") as string,
+      username: formData.get("username") as string,
       email: formData.get("email") as string,
       points: Number(formData.get("points")),
       role: formData.get("role") as Role,
       committee: formData.get("committee") as Committee,
-      username: formData.get("username") as string,
       memoTokens: Number(formData.get("memoTokens")),
       attendance: Number(formData.get("attendance")),
     };
 
     if (editingMember) {
-      setMembers((prev) =>
-        prev.map((m) =>
-          m.id === editingMember.id ? { ...m, ...memberData } : m
-        )
-      );
+      updateMember(editingMember.id, memberData); // Use the function from the context
     } else {
-      const newMember = { id: `usr-${Date.now()}`, ...memberData };
-      setMembers((prev) => [newMember, ...prev]);
+      addMember(memberData); // Use the function from the context
     }
     handleCloseModal();
   };
 
+  // === 4. FILTERING LOGIC (NO CHANGE IN LOGIC, JUST THE DATA SOURCE) ===
   const filteredMembers = useMemo(() => {
     return members
       .filter((member) => {
@@ -172,7 +102,7 @@ export default function AdminMembers() {
         (member) =>
           filters.committee === "All" || member.committee === filters.committee
       );
-  }, [searchTerm, filters, members]);
+  }, [searchTerm, filters, members]); // The `members` array from context is now a dependency.
 
   return (
     <div className="bg-[#1e293b] p-6 rounded-lg shadow-lg">
@@ -189,7 +119,6 @@ export default function AdminMembers() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-
         <div className="flex items-center gap-4">
           <div className="relative">
             <Filter
@@ -238,7 +167,6 @@ export default function AdminMembers() {
 
       <div className="overflow-x-auto">
         <table className="w-full text-sm text-left text-gray-300">
-          {/* ...thead... */}
           <thead className="text-xs text-[#9cc9ff] uppercase bg-[#0f172a]">
             <tr>
               <th scope="col" className="px-6 py-3">
@@ -305,7 +233,6 @@ export default function AdminMembers() {
         onClose={handleCloseModal}
         title={editingMember ? "Edit Member" : "Add New Member"}
       >
-        {/* ...form... */}
         <form onSubmit={handleSaveMember} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <input
