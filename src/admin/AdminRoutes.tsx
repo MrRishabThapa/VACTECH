@@ -8,22 +8,27 @@ import AdminProjects from "./pages/AdminProjects";
 import AdminCommunity from "./pages/AdminCommunity";
 import AdminPolls from "./pages/AdminPolls";
 import AdminSettings from "./pages/AdminSettings";
+import { AdminDataProvider } from "./context/AdminDataContext";
 
 // Placeholder components for other pages
 
 export default function AdminRoutes() {
   return (
-    <Routes>
-      <Route path="/" element={<AdminLayout />}>
-        <Route index element={<AdminDashboard />} />
-        <Route path="members" element={<AdminMembers />} />
-        <Route path="about" element={<AdminAbout />} />
-        <Route path="event" element={<AdminEvents />} />
-        <Route path="projects" element={<AdminProjects />} />
-        <Route path="communitys" element={<AdminCommunity />} />
-        <Route path="polls" element={<AdminPolls />} />
-        <Route path="settings" element={<AdminSettings />} />
-      </Route>
-    </Routes>
+    <>
+      <AdminDataProvider>
+        <Routes>
+          <Route path="/" element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="members" element={<AdminMembers />} />
+            <Route path="about" element={<AdminAbout />} />
+            <Route path="event" element={<AdminEvents />} />
+            <Route path="projects" element={<AdminProjects />} />
+            <Route path="communitys" element={<AdminCommunity />} />
+            <Route path="polls" element={<AdminPolls />} />
+            <Route path="settings" element={<AdminSettings />} />
+          </Route>
+        </Routes>
+      </AdminDataProvider>
+    </>
   );
 }
