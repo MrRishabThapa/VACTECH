@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { Sparkles, Info, Crown } from "lucide-react";
 import { InfoModal } from "./InfoModal";
 import { RanksTable, XpFormulaInfo } from "./RankSystem";
 import CountUp from "react-countup";
-import { useEffect } from "react";
 
 // --- TYPE DEFINITIONS ---
 type LegendMember = {
@@ -87,12 +86,9 @@ export default function WallOfLegends() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalTitle, setModalTitle] = useState<string>("");
   const [modalContent, setModalContent] = useState<"ranks" | "xp" | null>(null);
-  const [legends, setLegends] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Add proper typing for state arrays
   const [podium, setPodium] = useState<LegendMember[]>([]);
   const [others, setOthers] = useState<LegendMember[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const handleOpenModal = (title: string, content: "ranks" | "xp") => {
     setModalTitle(title);
@@ -104,33 +100,6 @@ export default function WallOfLegends() {
     setIsModalOpen(false);
     setModalContent(null);
   };
-
-  const handleLeaderBoardFetch = async () => {
-    try {
-      const res = await fetch(
-        " http://127.0.0.1:5000/api/leaderboard/get-leaderboard"
-      );
-      if (!res.ok) {
-        return console.log("Failed to Fetch Leaderboard data", res);
-      }
-      const data = await res.json();
-      const sorted_data = data?.sorted_users;
-      const topFiveUsers = sorted_data?.slice(0, 5);
-      setLegends(topFiveUsers);
-    } catch (e) {
-      console.log(e);
-      return;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const podium = legends.slice(0, 3);
-  const others = legends.slice(3);
-
-  useEffect(() => {
-    handleLeaderBoardFetch();
-  }, []);
 
   const handleFetchData = async () => {
     try {
@@ -153,7 +122,9 @@ export default function WallOfLegends() {
 
   useEffect(() => {
     handleFetchData();
+    setIsLoading(false);
   }, []);
+
 
   return (
     <>
@@ -209,7 +180,6 @@ export default function WallOfLegends() {
                         {member?.rank}
                       </span>
                       <img
-                        src={member?.avatar}
                         src={member?.avatar}
                         alt={member.name}
                         className="w-12 h-12 rounded-full"

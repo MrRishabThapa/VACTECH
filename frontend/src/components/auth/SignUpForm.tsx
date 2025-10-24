@@ -41,7 +41,7 @@ export default function SignUpForm() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async(e: FormEvent) => {
     e.preventDefault();
 
     if (!validateForm()) {
@@ -51,26 +51,32 @@ export default function SignUpForm() {
       return;
     }
 
-    const apiCall = new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (Math.random() > 0.2) {
-          resolve({ id: 1, name: username });
-        } else {
-          reject(new Error("Server is currently busy."));
-        }
-      }, 1500);
-    });
+    try{
+      const res = await fetch("http://127.0.0.1:5000/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, email, password }),
+      });
 
-    toast.promise(apiCall, {
-      loading: "Creating your account...",
-      success: () => {
-        return "Account created successfully! Welcome to the club.";
-      },
-      error: (err) => {
-        return err.message || "Failed to create account. Please try again.";
-      },
-    });
-  };
+      if (!res.ok){
+        console.log('Error Fetching Data:', res);
+        return;
+      }
+
+      const data = await res.json();
+      console.log(data);
+      toast.success("Account Created Successfully! Login to Gain Access to the app");
+    }
+
+    catch (e) {
+      console.log('Error Found while Fetching User data', e);
+      return;
+    }
+  }
+
+    
 
   return (
     <div>

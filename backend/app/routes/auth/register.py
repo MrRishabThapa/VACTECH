@@ -10,15 +10,15 @@ def register_user():
         data = request.get_json()
         email = data.get('email', None)
         password = data.get('password',None)
-        name = data.get('name', None)
+        username = data.get('username', None)
 
-        if not email or not password or not name:
+        if not email or not password or not username:
             return jsonify({'msg': 'Email, password and Name are required'}), 400
         
         user = auth.create_user(
             email=email,
             password=password,
-            display_name=name
+            display_name=username
         )
         uid = user.uid
 
@@ -31,10 +31,8 @@ def register_user():
         
         user_ref.set({
             'email': email,
-            'name': name,
-            'memo_tokens':10,
-            'rank' : 'Hacker',
-            'points': 1000,
+            'name': username,
+            'role': 'Visitor',
         })
 
         return jsonify({'msg': 'User registered sucessfully'}), 201

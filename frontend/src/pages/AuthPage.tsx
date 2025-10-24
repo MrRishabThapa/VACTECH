@@ -2,7 +2,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import LoginForm from "../components/auth/LoginForm";
 import SignUpForm from "../components/auth/SignUpForm";
-import HomeHeroGraphic from "../components/heroGraphics"; // Assuming this is your graphic
+import HomeHeroGraphic from "../components/heroGraphics"; 
 
 export default function AuthPage() {
   const [isLoginView, setIsLoginView] = useState(true);

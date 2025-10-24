@@ -4,8 +4,6 @@ import datetime
 from firebase_admin import auth
 from app.routes.auth.bp import auth_bp
 
-auth_bp = Blueprint('login', __name__)
-
 FIREBASE_API_KEY = "AIzaSyC5WmyHf2O-7RVObHDpq_mH7AYApepazOM"
 
 @auth_bp.route('/login', methods=['POST'])

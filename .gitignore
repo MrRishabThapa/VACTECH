@@ -12,12 +12,12 @@ dist
 dist-ssr
 *.local
 # Secrets
-/backend/supersecret.json
+supersecret.json
 /.venv
 .env
 
 # Python
-__pycache__/
+/__pycache__/
 *.pyc
 
 # Node

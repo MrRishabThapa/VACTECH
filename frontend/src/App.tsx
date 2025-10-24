@@ -23,6 +23,7 @@ import AdminProjects from "./admin/pages/AdminProjects";
 import AdminCommunity from "./admin/pages/AdminCommunity";
 import AdminPolls from "./admin/pages/AdminPolls";
 import AdminSettings from "./admin/pages/AdminSettings";
+import PreLoginLanding from "./pages/Landing";
 
 const PublicLayout = () => (
   <>
@@ -37,9 +38,10 @@ function App() {
     <BrowserRouter>
       <ScrollToTop />
       <Routes>
-        <Route path="/" element={<AuthPage />} />
+        <Route path="/auth" element={<AuthPage />} />
 
         <Route element={<PublicLayout />}>
+          <Route index element={<PreLoginLanding />} />
           <Route path="home" element={<HomePage />} />
           <Route path="PollsPage" element={<PollsPage />} />
           <Route path="community" element={<CommunityPage />} />
