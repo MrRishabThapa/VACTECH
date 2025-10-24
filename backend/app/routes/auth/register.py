@@ -32,8 +32,8 @@ def register_user():
         user_ref.set({
             'email': email,
             'name': name,
-            'created_at': auth.get_user(uid).create_time,
-            'updated_at': auth.get_user(uid).update_time,
+            'memo_tokens':10,
+            'rank' : 'Hacker',
             'points': 1000,
         })
 

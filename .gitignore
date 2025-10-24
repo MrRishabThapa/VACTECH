@@ -12,7 +12,7 @@ dist
 dist-ssr
 *.local
 # Secrets
-supersecret.json
+/backend/supersecret.json
 /.venv
 .env
 
