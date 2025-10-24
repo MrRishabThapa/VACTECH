@@ -1,8 +1,8 @@
 import { Search, Filter, ArrowRight, Gem } from "lucide-react";
-import { allProjects } from "../data/projects";
 import type { Project } from "../data/projects";
 import { Link } from "react-router-dom";
 import CountUp from "react-countup";
+import { useEffect, useState } from "react";
 
 const ProjectCard = ({ project }: { project: Project }) => {
   return (
@@ -23,32 +23,32 @@ const ProjectCard = ({ project }: { project: Project }) => {
         </div>
       </div>
       <p className="text-gray-300 mt-4 text-base leading-relaxed">
-        {project.shortDescription}
+        {project.desc}
       </p>
       <div className="flex justify-between items-center mt-6">
         <div className="flex items-center gap-2">
           <div className="flex -space-x-3">
-            {project.team.slice(0, 4).map((member, index) => (
+            {project.members.slice(0, 1).map((member, index) => (
               <div
                 key={index}
                 className="w-8 h-8 rounded-full bg-[#0a1a33] border-2 border-[#5ea4ff] flex items-center justify-center text-xs font-bold"
               >
-                {member.name.charAt(0)}
+                {member.charAt(0)}
               </div>
             ))}
-            {project.team.length > 4 && (
+            {project.members.length > 4 && (
               <div className="w-8 h-8 rounded-full bg-[#0a1a33] border-2 border-[#5ea4ff] flex items-center justify-center text-xs font-bold">
-                +{project.team.length - 4}
+                +{project.members.length - 4}
               </div>
             )}
           </div>
           <span className="text-sm text-gray-400">
-            {project.team.length} member(s)
+            {project.members.length} member(s)
           </span>
         </div>
         <div className="flex items-center text-[#9cc9ff] group-hover:text-white transition-colors">
           <span className="text-sm font-semibold">
-            {project.status === "available" ? "Join Project" : "View Details"}
+            {project.is_completed ? "Join Project" : "View Details"}
           </span>
           <ArrowRight
             size={18}
@@ -61,8 +61,35 @@ const ProjectCard = ({ project }: { project: Project }) => {
 };
 
 export default function ProjectsSection() {
-  const availableProjects = allProjects.filter((p) => p.status === "available");
-  const completedProjects = allProjects.filter((p) => p.status === "completed");
+  const [completedProjects, setCompletedProjects] = useState<Project[]>([]);
+  const [availableProjects, setAvailableProjects] = useState<Project[]>([]);
+
+  const handleFetch = async () => {
+    try {
+      const res = await fetch("http://127.0.0.1:5000/api/projects/projects");
+      if (!res.ok) {
+        console.log('Error Fetching Data:', res);
+        return;
+      }
+      const data = await res.json();
+      console.log(data);
+      const projects = data.projects;
+      const completed_projects = projects.filter(
+      (project: Project) => project.is_completed === true
+    );
+    setCompletedProjects(completed_projects);
+    const available_projects = projects.filter(
+      (project: Project) => project.is_completed === false
+    );
+    setAvailableProjects(available_projects);
+    } catch (error) {
+      console.log('Error Fetching Data:', error);
+    }
+  }
+
+  useEffect(() => {
+    handleFetch();
+  }, []);
 
   return (
     <section

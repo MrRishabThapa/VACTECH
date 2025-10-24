@@ -1,19 +1,33 @@
 // src/pages/ProjectDetailPage.tsx
-
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom"; // ✨ CHANGED: Import hooks and Link
-import { allProjects } from "../data/projects";
 import type { Project } from "../data/projects";
 import { Github, Calendar, Award, ChevronLeft } from "lucide-react";
 
-function getProjectData(id: string | undefined): Project | undefined {
-  if (!id) return undefined;
-  return allProjects.find((p) => p.id === parseInt(id));
-}
-
 export default function ProjectDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const project = getProjectData(id);
+  const [project, setProject] = useState<Project | null>(null);
 
+  const fetchEventsById = async (id) => {
+    try {
+      const res = await fetch(`http://127.0.0.1:5000/api/projects/get-project/${id}`);
+      if (!res.ok) {
+        console.log('Error Fetching Data:', res);
+        return;
+      }
+      const data = await res.json();
+      console.log(data);
+      setProject(data.project);
+    }
+    catch (e) {
+      console.log(e);
+      return;
+    }
+  }
+  useEffect(() => {
+    fetchEventsById(id);
+  }, []);
+  
   if (!project) {
     return (
       <div className="h-screen w-full bg-[#0a1a33] text-white flex items-center justify-center">
@@ -65,14 +79,14 @@ export default function ProjectDetailPage() {
               About the Project
             </h2>
             <p className="text-gray-300 leading-relaxed text-base">
-              {project.fullDescription}
+              {project.desc}
             </p>
 
             <h3 className="text-xl font-bold text-white mt-8 mb-4">
               Technology Stack
             </h3>
             <div className="flex flex-wrap gap-3">
-              {project.technologies.map((tech) => (
+              {project.technologies?.map((tech) => (
                 <span
                   key={tech}
                   className="bg-[#253961] text-[#9cc9ff] px-4 py-2 rounded-full font-medium text-sm"
@@ -89,8 +103,8 @@ export default function ProjectDetailPage() {
                 Team:
               </span>
               <div className="flex -space-x-4">
-                {project.team.length > 0 ? (
-                  project.team.slice(0, 5).map((member, index) => (
+                {project.members.length > 0 ? (
+                  project.members.slice(0, 5).map((member, index) => (
                     <div
                       key={index}
                       title={member.name}
@@ -103,7 +117,7 @@ export default function ProjectDetailPage() {
                           className="rounded-full"
                         />
                       ) : (
-                        member.name.charAt(0)
+                        member.charAt(0)
                       )}
                     </div>
                   ))
@@ -112,22 +126,22 @@ export default function ProjectDetailPage() {
                     Recruiting members...
                   </span>
                 )}
-                {project.team.length > 5 && (
+                {project.members.length > 5 && (
                   <div className="w-12 h-12 rounded-full bg-[#0a1a33] border-2 border-[#5ea4ff] flex items-center justify-center text-sm font-bold">
-                    +{project.team.length - 5}
+                    +{project.members.length - 5}
                   </div>
                 )}
               </div>
             </div>
 
             <div>
-              {project.status === "available" ? (
+              {!project.is_completed ? (
                 <button className="bg-[#2563eb] hover:bg-[#1d4ed8] text-white px-8 py-3 rounded-full font-semibold text-lg transition w-full sm:w-auto">
                   Join Project
                 </button>
               ) : (
                 <a
-                  href={project.repoUrl}
+                  href={project.github}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center border border-[#b3d9ff] text-[#b3d9ff] hover:bg-[#1a2f55] px-8 py-3 rounded-full font-semibold text-lg transition w-full sm:w-auto"
