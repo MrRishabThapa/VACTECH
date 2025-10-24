@@ -4,7 +4,7 @@ import HomePage from "./pages/Home";
 import ScrollToTop from "./components/ScrollToTop";
 import CommunityPage from "./pages/CommunityPage";
 import PollsPage from "./components/community/Polls";
-import PreLoginLanding from "./pages/Landing";
+// import PreLoginLanding from "./pages/Landing";
 import WallOfLegends from "./components/community/WallOfLegends";
 import ProjectsSection from "./pages/ProjectsSection";
 import GalleryPage from "./components/gallery/GalleryPage";
@@ -12,6 +12,7 @@ import ProjectDetailPage from "./pages/ProjectDetailPage";
 import DashBoard from "./pages/DashBoard";
 import EventsPage from "./pages/EventsPage";
 import Footer from "./components/Footer";
+import AuthPage from "./pages/AuthPage";
 import { AdminDataProvider } from "./admin/context/AdminDataContext";
 import AdminPanelLayout from "./admin/components/AdminLayout";
 import AdminDashboard from "./admin/pages/AdminDashboard";
@@ -36,7 +37,7 @@ function App() {
     <BrowserRouter>
       <ScrollToTop />
       <Routes>
-        <Route path="/" element={<PreLoginLanding />} />
+        <Route path="/" element={<AuthPage />} />
 
         <Route element={<PublicLayout />}>
           <Route path="home" element={<HomePage />} />

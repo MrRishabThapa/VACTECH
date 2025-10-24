@@ -4,20 +4,7 @@ import { Sparkles, Info, Crown } from "lucide-react";
 import { InfoModal } from "./InfoModal";
 import { RanksTable, XpFormulaInfo } from "./RankSystem";
 import CountUp from "react-countup";
-
-// Mock data for legends
-const legends = [
-  { rank: 1, name: "Chris Evans", points: 2450, avatar: "/avatars/chris.png" },
-  { rank: 2, name: "Sarah Day", points: 2100, avatar: "/avatars/sarah.png" },
-  { rank: 3, name: "Mike Chen", points: 1980, avatar: "/avatars/mike.png" },
-  { rank: 4, name: "Liam Harris", points: 1850, avatar: "/avatars/liam.png" },
-  {
-    rank: 5,
-    name: "Olivia Martin",
-    points: 1700,
-    avatar: "/avatars/olivia.png",
-  },
-];
+import { useEffect } from "react";
 
 // --- TYPE DEFINITIONS ---
 type LegendMember = {
@@ -70,7 +57,7 @@ const PodiumMember = ({
       {member.rank === 1 ? "1st" : member.rank === 2 ? "2nd" : "3rd"}
     </h1>
     <img
-      src={member.avatar}
+      src={member?.avatar}
       alt={member.name}
       className="w-20 h-20 rounded-full border-4 border-white mb-3"
     />
@@ -93,14 +80,13 @@ const InfoCard = ({ icon, title, description, onClick }: InfoCardProps) => (
   </button>
 );
 
-const podium = legends.slice(0, 3);
-const others = legends.slice(3);
-
 // --- MAIN COMPONENT ---
 export default function WallOfLegends() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [modalContent, setModalContent] = useState<"ranks" | "xp" | null>(null);
+  const [legends, setLegends] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleOpenModal = (title: string, content: "ranks" | "xp") => {
     setModalTitle(title);
@@ -112,6 +98,33 @@ export default function WallOfLegends() {
     setIsModalOpen(false);
     setModalContent(null);
   };
+
+  const handleLeaderBoardFetch = async () => {
+    try {
+      const res = await fetch(
+        " http://127.0.0.1:5000/api/leaderboard/get-leaderboard"
+      );
+      if (!res.ok) {
+        return console.log("Failed to Fetch Leaderboard data", res);
+      }
+      const data = await res.json();
+      const sorted_data = data?.sorted_users;
+      const topFiveUsers = sorted_data?.slice(0, 5);
+      setLegends(topFiveUsers);
+    } catch (e) {
+      console.log(e);
+      return;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const podium = legends.slice(0, 3);
+  const others = legends.slice(3);
+
+  useEffect(() => {
+    handleLeaderBoardFetch();
+  }, []);
 
   return (
     <>
@@ -159,7 +172,7 @@ export default function WallOfLegends() {
                         {member.rank}
                       </span>
                       <img
-                        src={member.avatar}
+                        src={member?.avatar}
                         alt={member.name}
                         className="w-12 h-12 rounded-full"
                       />
