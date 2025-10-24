@@ -92,7 +92,8 @@ def create_project():
             "github": data["github"],
             "members": data["members"],
             "is_approved": False,
-            "unknown_members": []
+            "unknown_members": [],
+            "points": 0
         })
 
         return jsonify({'msg': 'Sucessfully created the project'}), 201
@@ -171,8 +172,17 @@ def delete_project(id):
 @projects_bp.route('/approve-project/<id>', methods=['PUT', 'PATCH'])
 def approve_project(id):
     try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'msg': 'Missing JSON data'}), 400
+        
         'Creating a db Instance'
         db = current_app.config['db']
+
+        points = data.get('points')
+        if not points:
+            return jsonify({'msg': 'Missing points'}), 400
+
 
         user = get_current_user()
         if not user:
@@ -187,7 +197,8 @@ def approve_project(id):
             return jsonify({'msg': "Could not find the project"}), 404
         
         project_ref.update({
-            "is_approved": True
+            "is_approved": True,
+            "points": points
         })
 
         return jsonify({'msg': 'Sucessfully deleted the project'}), 200

@@ -1,23 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { Sparkles, Info, Crown } from "lucide-react";
 import { InfoModal } from "./InfoModal";
 import { RanksTable, XpFormulaInfo } from "./RankSystem";
 import CountUp from "react-countup";
-
-// Mock data for legends
-const legends = [
-  { rank: 1, name: "Chris Evans", points: 2450, avatar: "/avatars/chris.png" },
-  { rank: 2, name: "Sarah Day", points: 2100, avatar: "/avatars/sarah.png" },
-  { rank: 3, name: "Mike Chen", points: 1980, avatar: "/avatars/mike.png" },
-  { rank: 4, name: "Liam Harris", points: 1850, avatar: "/avatars/liam.png" },
-  {
-    rank: 5,
-    name: "Olivia Martin",
-    points: 1700,
-    avatar: "/avatars/olivia.png",
-  },
-];
 
 // --- TYPE DEFINITIONS ---
 type LegendMember = {
@@ -26,12 +12,14 @@ type LegendMember = {
   points: number;
   avatar: string;
 };
+
 type PodiumMemberProps = {
   member: LegendMember;
   height: string;
   borderColor: string;
   medalColor: string;
 };
+
 type InfoCardProps = {
   icon: ReactNode;
   title: string;
@@ -39,7 +27,7 @@ type InfoCardProps = {
   onClick: () => void;
 };
 
-// --- REUSABLE COMPONENTS (defined within this file) ---
+// --- REUSABLE COMPONENTS ---
 const PodiumMember = ({
   member,
   height,
@@ -76,7 +64,7 @@ const PodiumMember = ({
     />
     <h4 className="font-bold text-white text-xl">{member.name}</h4>
     <p className={`font-black text-xl ${medalColor}`}>
-      <CountUp end={member.points} duration={3} /> pts
+      <CountUp end={member.points} duration={3} />
     </p>
   </div>
 );
@@ -93,14 +81,15 @@ const InfoCard = ({ icon, title, description, onClick }: InfoCardProps) => (
   </button>
 );
 
-const podium = legends.slice(0, 3);
-const others = legends.slice(3);
-
 // --- MAIN COMPONENT ---
 export default function WallOfLegends() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalTitle, setModalTitle] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [modalTitle, setModalTitle] = useState<string>("");
   const [modalContent, setModalContent] = useState<"ranks" | "xp" | null>(null);
+
+  // Add proper typing for state arrays
+  const [podium, setPodium] = useState<LegendMember[]>([]);
+  const [others, setOthers] = useState<LegendMember[]>([]);
 
   const handleOpenModal = (title: string, content: "ranks" | "xp") => {
     setModalTitle(title);
@@ -112,6 +101,29 @@ export default function WallOfLegends() {
     setIsModalOpen(false);
     setModalContent(null);
   };
+
+  const handleFetchData = async () => {
+    try {
+      const response = await fetch(
+        "http://127.0.0.1:5000/api/leaderboard/get-leaderboard"
+      );
+      if (!response.ok) {
+        console.log("Error Fetching Data:", response);
+        return;
+      }
+      const data = await response.json();
+      console.log(data)
+      const sorted_data: LegendMember[] = data?.sorted_users || [];
+      setPodium(sorted_data.slice(0, 3));
+      setOthers(sorted_data.slice(3));
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    handleFetchData();
+  }, []);
 
   return (
     <>
@@ -128,45 +140,53 @@ export default function WallOfLegends() {
           <div className="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-10">
             <div className="lg:col-span-2">
               <div className="flex justify-center items-end gap-4">
-                <PodiumMember
-                  member={podium[1]}
-                  height="h-64"
-                  borderColor="border-slate-300"
-                  medalColor="text-slate-300"
-                />
-                <PodiumMember
-                  member={podium[0]}
-                  height="h-80"
-                  borderColor="border-yellow-400"
-                  medalColor="text-yellow-400"
-                />
-                <PodiumMember
-                  member={podium[2]}
-                  height="h-56"
-                  borderColor="border-orange-400"
-                  medalColor="text-orange-400"
-                />
+                {podium?.length >= 2 ? (
+                  <>
+                    <PodiumMember
+                      member={podium[1]}
+                      height="h-64"
+                      borderColor="border-slate-300"
+                      medalColor="text-slate-300"
+                    />
+                    <PodiumMember
+                      member={podium[0]}
+                      height="h-80"
+                      borderColor="border-yellow-400"
+                      medalColor="text-yellow-400"
+                    />
+                    <PodiumMember
+                      member={podium[2]}
+                      height="h-56"
+                      borderColor="border-orange-400"
+                      medalColor="text-orange-400"
+                    />
+                  </>
+                ) : (
+                  <p className="text-gray-400 text-center w-full">
+                    Loading leaderboard...
+                  </p>
+                )}
               </div>
 
               <div className="mt-10 flex flex-col gap-4">
                 {others.map((member) => (
                   <div
-                    key={member.rank}
+                    key={member?.rank}
                     className="bg-[#1a2f55] p-4 rounded-lg flex items-center justify-between hover:bg-[#254272] transition-colors"
                   >
                     <div className="flex items-center gap-4">
                       <span className="font-bold text-xl text-gray-400 w-8 text-center">
-                        {member.rank}
+                        {member?.rank}
                       </span>
                       <img
-                        src={member.avatar}
+                        src={member?.avatar}
                         alt={member.name}
                         className="w-12 h-12 rounded-full"
                       />
                       <p className="font-semibold text-white">{member.name}</p>
                     </div>
                     <p className="font-bold text-lg text-[#9cc9ff]">
-                      <CountUp end={member.points} duration={2}></CountUp> pts
+                      <CountUp end={member.points} duration={2} /> pts
                     </p>
                   </div>
                 ))}
@@ -191,7 +211,6 @@ export default function WallOfLegends() {
         </div>
       </section>
 
-      {/* MODAL COMPONENT RENDERED HERE */}
       <InfoModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
