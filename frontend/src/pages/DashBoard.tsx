@@ -15,34 +15,11 @@ import {
 import CreateProjectModal from "../components/CreateProjectModal";
 
 export default function DashboardPage() {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState <{ [key: string]: string }>({});
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(
-          "http://127.0.0.1:5000/api/dashboard/dashboard"
-        );
-        const jsonData = await response.json();
-        setData(jsonData);
-      } catch (error) {
-        console.error("Error fetching dashboard data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const memberData = {
-    name: "Rishab Thapa",
-    role: "President",
-    committee: "HOD ",
-    points: 1850,
-    memoToken: 3,
     profileImage: "./src/assets/hod&ch/rishab.jpg",
     contributions: [
       {
@@ -104,6 +81,29 @@ export default function DashboardPage() {
     </div>
   );
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(
+          "http://127.0.0.1:5000/api/dashboard/dashboard",
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
+        const jsonData = await response.json();
+        const userData = jsonData?.user_info;
+        setData(userData);
+      } catch (error) {
+        console.error("Error fetching dashboard data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <>
       <main className="min-h-screen bg-[#0a1a33] p-4 sm:p-6 lg:p-8 font-poppins">
@@ -112,15 +112,15 @@ export default function DashboardPage() {
             <div className="relative h-130 w-full rounded-xl overflow-hidden shadow-lg">
               <img
                 src={memberData.profileImage}
-                alt={memberData.name}
+                alt={data.name}
                 className="absolute inset-0 w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent"></div>
               <div className="absolute bottom-0 left-0 p-6 text-white">
                 <h2 className="text-3xl font-bold text-shadow-md">
-                  Welcome, {memberData.name.split(" ")[0]}!
+                  Welcome, {data.name}!
                 </h2>
-                <p className="text-md text-gray-200">{memberData.role}</p>
+                <p className="text-md text-gray-200">{data.role}</p>
               </div>
             </div>
 
@@ -146,25 +146,25 @@ export default function DashboardPage() {
               <StatCard
                 icon={User}
                 label="Role"
-                value={memberData.role}
+                value={data.role}
                 colorClass="text-blue-300"
               />
               <StatCard
                 icon={Star}
                 label="Points"
-                value={memberData.points}
+                value={data.points}
                 colorClass="text-yellow-300"
               />
               <StatCard
                 icon={Users}
                 label="Committee"
-                value={memberData.committee}
+                value={data.committee}
                 colorClass="text-green-300"
               />
               <StatCard
                 icon={Coins}
                 label="Memo Tokens"
-                value={memberData.memoToken}
+                value={data.memo_Token}
                 colorClass="text-amber-400"
               />
             </div>

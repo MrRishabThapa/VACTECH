@@ -41,7 +41,7 @@ def login_user():
             session_cookie,
             httponly=True,
             secure=False,       
-            samesite="Lax",
+            samesite="None",
             max_age=7 * 24 * 60 * 60,
             partitioned=True
         )

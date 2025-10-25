@@ -1,27 +1,40 @@
-from flask import request
+from flask import request, jsonify
+import firebase_admin
 from firebase_admin import auth
+from functools import wraps
 
 def get_current_user():
-    session_cookie = request.cookies.get("session")
-    print("Session Cookie:", session_cookie)
-    
-    if not session_cookie:
-        return None
-
+    """
+    Reads the Firebase ID token from cookies and verifies it.
+    Returns the decoded token (dict) if valid, otherwise None.
+    """
     try:
-        decoded_token = auth.verify_session_cookie(session_cookie, check_revoked=True)
+        # The cookie name your frontend sets (adjust if needed)
+        id_token = request.cookies.get('firebase_token')
+
+        if not id_token:
+            return None  # No token provided
         
-        user_info = {
-            "uid": decoded_token.get("uid"),
-            "email": decoded_token.get("email"),
-            "name": decoded_token.get("name", "No Name"),
-            "role": decoded_token.get("role"),
-            "is_admin": decoded_token.get("is_admin"),
-            "decoded": decoded_token
+        decoded_token = auth.verify_id_token(id_token, check_revoked=True)
+        user = {
+            "uid": decoded_token['uid'],
+            "email": decoded_token['email'],
+            "name": decoded_token['name'],
+            "role": decoded_token['role'],
+            "is_admin": decoded_token['is_admin']
         }
 
-        return user_info
+        return user
 
+    except auth.ExpiredIdTokenError:
+        print("⚠️ Token expired.")
+        return None
+    except auth.InvalidIdTokenError:
+        print("⚠️ Invalid token.")
+        return None
+    except auth.RevokedIdTokenError:
+        print("⚠️ Token has been revoked.")
+        return None
     except Exception as e:
-        print("Firebase token verification failed:", e)
+        print("⚠️ Error verifying token:", e)
         return None

@@ -4,6 +4,10 @@ import cloudinary
 from flask_cors import CORS
 
 db = None
+'''Initialzing Firebase app'''
+cred = credentials.Certificate('supersecret.json')
+initialize_app(cred)
+db = firestore.client()
 
 def create_app():
     app = Flask(__name__)
@@ -15,11 +19,6 @@ def create_app():
         api_secret="q8tDQ2d7hzfI6A05QLlwP8m-rKQ",
         secure=True
     )
-
-    '''Initialzing Firebase app'''
-    cred = credentials.Certificate('supersecret.json')
-    initialize_app(cred)
-    db = firestore.client()
 
     '''Enabling Flask CORS to the app'''
     CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
